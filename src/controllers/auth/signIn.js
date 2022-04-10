@@ -15,7 +15,10 @@ const handleSignIn = async (req, res) => {
 		if (!validate.string(password, { allowEmpty: false }))
 			return res.status(400).send({ error: errorCode.INVALID_PASSWORD });
 
-		const adminMatch = await Admin.findOne({ where: { username } });
+		const adminMatch = await Admin.findOne({
+			where: { username },
+			include: [League],
+		});
 
 		if (!adminMatch)
 			return res.status(400).send({ error: errorCode.INVALID_USERNAME });

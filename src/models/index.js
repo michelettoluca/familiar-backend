@@ -48,6 +48,10 @@ Player.belongsToMany(League, { through: PlayerLeague });
 Season.hasMany(Event, { onDelete: "CASCADE" });
 Event.belongsTo(Season);
 
+// (1) League - (N) Event
+League.hasMany(Event, { onDelete: "CASCADE" });
+Event.belongsTo(League);
+
 // (1) Archetype - (N) Result
 Archetype.hasMany(Result, { onDelete: "CASCADE" });
 Result.belongsTo(Archetype);

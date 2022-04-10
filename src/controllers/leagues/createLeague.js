@@ -37,6 +37,7 @@ const createLeague = async (req, res) => {
 					username: tag,
 					password: hashedPassword,
 					role: role.ORGANIZER,
+					leagueId: tmpLeague.id,
 				},
 				{ transaction }
 			);

@@ -10,9 +10,7 @@ const getLeagueById = async (req, res) => {
 			return res.status(400).send({ error: errorCode.INVALID_LEAGUE_UUID });
 
 		const league = await League.findOne({
-			where: {
-				id: leagueId,
-			},
+			where: { id: leagueId },
 		});
 
 		if (!league)

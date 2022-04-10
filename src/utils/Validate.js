@@ -4,8 +4,8 @@ const typeOf = (obj) =>
 const { eventType, role, color, playstyle } = require("./constants");
 
 class validate {
-	static string(value, { allowEmpty = true }) {
-		if (allowEmpty) return typeOf(value) === "string";
+	static string(value, { allowEmpty = true } = {}) {
+		if (typeOf(value) !== "string") return false;
 
 		if (!allowEmpty && value === "") return false;
 

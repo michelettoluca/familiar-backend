@@ -1,5 +1,6 @@
 const { League, Admin, Database } = require("../../models");
 const { errorCode } = require("../../utils/constants");
+const Bcrypt = require("bcrypt");
 const validate = require("../../utils/Validate");
 
 const updateLeague = async (req, res) => {
@@ -7,40 +8,40 @@ const updateLeague = async (req, res) => {
 		const { leagueId } = req.params;
 		const { name, tag, password } = req.body;
 
-		if (!validate.string(name))
+		if (name && !validate.string(name))
 			return res.status(400).send({ error: errorCode.INVALID_LEAGUE_NAME });
 
-		if (!validate.string(tag))
+		if (tag && !validate.string(tag))
 			return res.status(400).send({ error: errorCode.INVALID_LEAGUE_TAG });
 
-		if (!validate.string(password))
+		if (password && !validate.string(password))
 			return res.status(400).send({ error: errorCode.INVALID_LEAGUE_PASSWORD });
 
-		const matchLeagueToUpdate = await League.findOne({
+		const matchLeague = await League.findOne({
 			where: { id: leagueId },
 		});
 
-		if (!matchLeagueToUpdate)
+		if (!matchLeague)
 			return res.status(400).send({ error: errorCode.LEAGUE_NOT_FOUND });
 
 		const adminMatch = await Admin.findOne({
-			where: { username: matchLeagueToUpdate.tag },
+			where: { username: matchLeague.tag },
 		});
 
-		const matchLeague = await League.findOne({ where: { tag } });
-
-		if (matchLeague && matchLeague.id !== matchLeagueToUpdate.id)
+		if (matchLeague && matchLeague.id !== matchLeague.id)
 			return res.status(400).send({ error: errorCode.LEAGUE_TAG_TAKEN });
 
-		const hashedPassword = await Bcrypt.hash(password, 10);
+		let hashedPassword;
+		if (password) hashedPassword = await Bcrypt.hash(password, 10);
 
 		const updatedLeague = await Database.transaction(async (transaction) => {
-			const tmpUpdatedLeague = await matchLeagueToUpdate.update(
+			const tmpUpdatedLeague = await matchLeague.update(
 				{ name, tag },
 				{ transaction }
 			);
+
 			await adminMatch.update(
-				{ username: tag, password: hashedPassword },
+				{ username: tag, password: password ? hashedPassword : undefined },
 				{ transaction }
 			);
 

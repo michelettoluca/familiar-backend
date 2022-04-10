@@ -1,11 +1,10 @@
-const { Event, EventResult, Player, League, Season } = require("../../models");
+const { Event, Result, Player, League, Season } = require("../../models");
 
 const { Op } = require("sequelize");
 const sequelize = require("sequelize");
 
 const validate = require("../../utils/validate");
-const { eventTypes, errorCode } = require("../../utils/constants");
-const Archetype = require("../../models/Archetype");
+const { eventType, errorCode } = require("../../utils/constants");
 
 const getLeaderboard = async (req, res) => {
 	try {
@@ -21,11 +20,7 @@ const getLeaderboard = async (req, res) => {
 		if (!leagueMatch)
 			return res.status(400).send({ error: errorCode.LEAGUE_NOT_FOUND });
 
-		const { dataValues: currentSeason } = await Season.findOne({
-			order: [["beginsAt", "DESC"]],
-		});
-
-		const leaderboard = await EventResult.findAll({
+		const leaderboard = await Result.findAll({
 			attributes: [[sequelize.fn("SUM", sequelize.col("score")), "points"]],
 			group: ["player.id"],
 			include: [
@@ -33,9 +28,9 @@ const getLeaderboard = async (req, res) => {
 					model: Event,
 					where: {
 						[Op.and]: [
-							{ seasonId: currentSeason.id },
+							// { seasonId: currentSeason.id },
 							{ leagueId },
-							{ type: eventTypes.REGULAR },
+							{ type: eventType.REGULAR },
 						],
 					},
 					attributes: [],

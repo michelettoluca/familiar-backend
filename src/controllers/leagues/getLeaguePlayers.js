@@ -1,4 +1,4 @@
-const { Player, League } = require("../../models");
+const { Player, League, PlayerLeague } = require("../../models");
 const { errorCode } = require("../../utils/constants");
 const validate = require("../../utils/Validate");
 
@@ -11,16 +11,13 @@ const getLeaguePlayers = async (req, res) => {
 
 		const leagueMatch = await League.findOne({
 			where: { id: leagueId },
+			include: Player,
 		});
 
 		if (!leagueMatch)
 			return res.status(400).send({ error: errorCode.LEAGUE_NOT_FOUND });
 
-		const players = await Player.findAll({
-			where: {
-				leagueId,
-			},
-		});
+		const players = leagueMatch.dataValues.players;
 
 		return res.status(200).send(players);
 	} catch (err) {
