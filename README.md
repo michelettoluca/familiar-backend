@@ -23,3 +23,6 @@ Familiar is a fullstack application I'm developing for Lega Pauper Italia which 
 - [ ] **GET** event metagame
 - [ ] **GET** player stats
 
+## Screenshots
+*Database structure*
+![Databse structure](https://i.imgur.com/gRds6Nm.png)
