@@ -17,7 +17,9 @@ class validate {
 	}
 
 	static date(value) {
-		return typeOf(value) === "date";
+		if (!this.string(value)) return false;
+
+		return true;
 	}
 
 	static uuid(value) {

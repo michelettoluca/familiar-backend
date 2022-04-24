@@ -1,3 +1,4 @@
+const sequelize = require("sequelize");
 const {
 	Player,
 	Event,
@@ -8,8 +9,6 @@ const {
 } = require("../../models");
 const { errorCode } = require("../../utils/constants");
 const validate = require("../../utils/Validate");
-
-/// ????????????????????????????????????????????
 
 const getLeagueEvents = async (req, res) => {
 	try {
@@ -25,18 +24,24 @@ const getLeagueEvents = async (req, res) => {
 		if (!leagueMatch)
 			return res.status(400).send({ error: errorCode.LEAGUE_NOT_FOUND });
 
-		const currentSeason = await Season.findOne({
-			order: [["beginsAt", "DESC"]],
-		});
+		// const currentSeason = await Season.findOne({
+		// 	order: [["endsAt", "DESC"]],
+		// });
 
+		console.clear();
 		const events = await Event.findAll({
 			where: {
 				leagueId,
-				seasonId: currentSeason.id,
+				// seasonId: currentSeason.id,
 			},
 			include: [Season],
-			order: [["date", "DESC"]],
+			order: [
+				[sequelize.col("season.endsAt"), "DESC"],
+				["date", "DESC"],
+			],
 		});
+
+		console.log(events);
 
 		const response = [];
 
