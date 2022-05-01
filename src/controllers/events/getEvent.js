@@ -1,10 +1,4 @@
-const {
-	Event,
-	EventResult,
-	Player,
-	Archetype,
-	Season,
-} = require("../../models");
+const { Event, Result, Player, Archetype, Season } = require("../../models");
 const validate = require("../../utils/Validate");
 const { errorCode } = require("../../utils/constants");
 
@@ -19,12 +13,12 @@ const getLeagueById = async (req, res) => {
 			where: { id: eventId },
 			include: [
 				{
-					model: EventResult,
+					model: Result,
 					include: [Player, Archetype],
 				},
 				{ model: Season },
 			],
-			order: [[EventResult, "score", "DESC"]],
+			order: [[Result, "score", "DESC"]],
 		});
 
 		if (!event)

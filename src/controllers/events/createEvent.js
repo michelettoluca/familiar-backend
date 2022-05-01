@@ -2,14 +2,14 @@ const {
 	Player,
 	League,
 	Event,
-	EventResult,
+	Result,
 	Archetype,
 	Season,
 } = require("../../models");
 
 const format = require("../../utils/format");
 const validate = require("../../utils/validate");
-const { eventTypes, errorCode } = require("../../utils/constants");
+const { eventType, errorCode } = require("../../utils/constants");
 
 const createEvent = async (req, res) => {
 	try {
@@ -19,7 +19,7 @@ const createEvent = async (req, res) => {
 			return res.status(400).send({ error: errorCode.INVALID_EVENT_TYPE });
 
 		if (
-			type === eventTypes.OFF_SEASON &&
+			type === eventType.OFF_SEASON &&
 			!validate.string(name, { allowEmpty: false })
 		)
 			return res.status(400).send({ error: errorCode.INVALID_EVENT_NAME });
@@ -78,6 +78,8 @@ const createEvent = async (req, res) => {
 
 			if (!validate.number(rank))
 				return res.status(400).send({ error: errorCode.INVALID_RESULT_RANK });
+
+			console.log({ playerId, archetypeId, score, rank });
 		}
 
 		const fDate = format.date(date);
@@ -85,13 +87,13 @@ const createEvent = async (req, res) => {
 		const event = await Event.create(
 			{
 				type,
-				name: type === eventTypes.OFF_SEASON ? name : "Tappa regolare",
+				name: type === eventType.OFF_SEASON ? name : "Tappa regolare",
 				date: fDate,
 				seasonId,
 				leagueId,
 				results,
 			},
-			{ include: [EventResult] }
+			{ include: [Result] }
 		);
 
 		return res.status(201).send(event);

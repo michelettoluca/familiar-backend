@@ -1,7 +1,12 @@
 const typeOf = (obj) =>
 	Object.prototype.toString.call(obj).slice(8, -1).toLowerCase();
 
-const { eventType, role, color, playstyle } = require("./constants");
+const {
+	eventType: eventTypes,
+	role,
+	color,
+	playstyle,
+} = require("./constants");
 
 class validate {
 	static string(value, { allowEmpty = true } = {}) {
@@ -32,9 +37,11 @@ class validate {
 	}
 
 	static eventType(value) {
-		if (!this.string(value, { allowEmpty: false })) return false;
+		// if (!this.string(value, { allowEmpty: false })) return false;
 
-		return Object.keys(eventType).includes(value);
+		console.log(eventTypes);
+
+		return Object.keys(eventTypes).includes(value);
 	}
 
 	static role(value) {

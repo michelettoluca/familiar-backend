@@ -7,6 +7,8 @@ const createArchetype = async (req, res) => {
 	try {
 		const { name, colors, playstyle } = req.body;
 
+		console.log("#########################", { name, colors, playstyle });
+
 		if (!validate.string(name))
 			return res.status(400).send({ error: errorCode.INVALID_ARCHETYPE_NAME });
 
